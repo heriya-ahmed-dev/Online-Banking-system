@@ -1,90 +1,128 @@
 
-const usermodel = require('../model/usermodel')
+const Jwt  = require('jsonwebtoken')
 
-const CreateUser = (req,res) =>{
+const userservice = require('../service_layer/userservice');
 
-     const user = req.body
+ require('dotenv').config()
 
-    usermodel.CreateUser(user,(err,result)=>{
+const ResiterUser = (req,res) =>{
+    
+    const user = req.body
+
+    userservice.registerUser(user,(err,result)=>{
         if(err){
-            res.status(400).send({
-                message:"Error happened on the user creating"
+            console.log('Error happened in the user registeration on the controller',err)
+            return res.status(404).json({
+                message : 'Email is already registered!!!'
             })
-            console.log('Error happened on the user creating',err)
         }
-        res.send(result)
+        console.log('Email is successfully registered!!!')
+        return res.status(200).json({
+            message : "Congratulations Email successfully registered!!!",
+            result: result
+        })
     })
 }
 
-const GetAllUser = (req,res) =>{
-    usermodel.GetAllUser((err,result)=>{
+const LoginUser = (req,res) =>{
+    const user  =req.body
+
+    userservice.loginUser(user,(err,result)=>{
         if(err){
-            console.log('Error happened on the getting all users')
+            console.log('Error happened on the user login at the controller',err)
+            return res.status(404).json({
+                message : 'Sorry user is not existed please register again'
+            })
         }
-        res.send(result)
+        
+        const token = Jwt.sign({
+            id : result.id,
+            role : result.role
+        },
+         process.env.SECREAT_KEY)
+
+         res.status(200).send({
+            message : 'user loggedin successfully!!!',
+            result: result,
+            token: token
+        })
+        
     })
 }
 
-const GetUserById = (req,res) =>{
+const GetProfile = (req,res) =>{
     const {id} = req.params
 
-    usermodel.GetUserById(id,(err,result)=>{
+    userservice.getprofile(id,(err,result)=>{
         if(err){
-            console.log('Error happened during get User by Id: ',err)
+            console.log('error happend during getting user profile',err)
+            return err
         }
-        res.send(result)
+        return res.status(200).send({
+            message : 'user profile succesffuly sent to the client',
+            result: result
+        })
     })
 }
 
-const GetUserByEmail = (req,res) =>{
-    const {email} = req.params
+const UpdateProfile = (req,res) =>{
+    const {id} = req.params
+    const user = req.body
 
-    usermodel.getUserByEmail(email,(err,result)=>{
+    userservice.updateProfile(user,id,(err,result)=>{
         if(err){
-            console.log('Error happened during getting data by email',err)
+            console.log('Error happened during updating the profile')
+            return res.status(404).send({
+                message : 'Error happened during user updating!!!'
+            })
         }
-        res.send(result)
+        console.log('User profile successfully ipdated!!!')
+        return res.status(200).json({
+            message : 'User profile successfullt updated',
+            result: result
+        })
     })
 }
-const GetUserByPassword = (req,res) =>{
-    const {password} = req.params
 
-    usermodel.GetUserByPassword(password,(err,result)=>{
+
+
+const GetAllUser = (req,res)=>{
+    userservice.getAllUsers((err,result)=>{
         if(err){
-            console.log('Error happened on the getting data by password',err)
+            console.log('Error happend during getting all the users')
+            return res.status(404).send({
+                message : "Error happend during getting all the users"
+            })
         }
-        res.send(result)
+        return res.status(200).json({
+            message : 'All user data succesfully sent to the admin',
+            result: result
+        })
     })
 }
 
-const UpdateUser = (req,res) =>{
-  const {id} = req.params;
-  const user = req.body;
-  
-  usermodel.updateUser(user,id,(err,result)=>{
-    if(err){
-        console.log('Error happened during data updating')
-    }
-    res.send(result)
-  })
-}
 const DeleteUser = (req,res) =>{
-    const {id} = req.params;
-
-    usermodel.DeleteUser(id,(err,result)=>{
+    const {id} = req.params
+    userservice.deleteUser(id,(err,result)=>{
         if(err){
-            console.log('Error happened during deleting of User',err)
+            console.log('Error happened during deleting user profile')
+            return res.status(404).json({
+                message : "Error happened during deleting user profile"
+            })
         }
-        res.send(result)
+        console.log('User successfully deleted!!!');
+        return res.status(200).json({
+            message : 'User successfully Deleted',
+            result: result
+        })
     })
 }
 
-module.exports = [
-    CreateUser,
+module.exports ={
+    ResiterUser,
+    LoginUser,
+    GetProfile,
+    UpdateProfile,
     GetAllUser,
-    GetUserByEmail,
-    GetUserById,
-    GetUserByPassword,
-    UpdateUser,
     DeleteUser
-]
+}

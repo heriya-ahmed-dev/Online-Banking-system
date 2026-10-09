@@ -1,7 +1,7 @@
 const db = require('../db')
 
-const createUser = (user,callback) =>{
-    const {name,email,password,phone,address,role,status} = user;
+const createUser = (users,callback) =>{
+    const {name,email,password,phone,address,role,status} = users;
 
     const sql = `INSERT INTO user 
                  (name,email,password,phone,address,role,status)
@@ -42,17 +42,19 @@ const getUserbyEmail = (email,callback) =>{
 
 }
 
-const getUserByPassword = (password,callback) =>{
-    
-    const sql = `SELECT * FROM user WHERE password = ?`
 
-    db.query(sql,[password],callback)
-}
 
-const updateUser = (user,id,callback) =>{
+const updateUser = (users,id,callback) =>{
 
-    const {name , email, password,phone,address,role,status} = user
-    const sql = `UPDATE user SET (name,email,password,phone,address,role,status)
+    const {name , email, password,phone,address,role,status} = users
+    const sql = `UPDATE user SET 
+                               name = ?,
+                               email = ?,
+                               password = ?,
+                               phone = ?,
+                               address = ?,
+                               role = ?,
+                               status = ?
                  WHERE id = ?
     `
     const values = [
@@ -62,10 +64,11 @@ const updateUser = (user,id,callback) =>{
         phone,
         address,
         role,
-        status
+        status,
+        id
     ]
 
-    db.query(sql,values,[id],callback)
+    db.query(sql,values,callback)
 }
 
 const deleteUser = (id,callback) =>{
@@ -75,12 +78,11 @@ const deleteUser = (id,callback) =>{
     db.query(sql,[id],callback)
 }
 
-module.exports = [
+module.exports = {
     createUser,
     getAllUser,
     getUserById,
-    getUserByPassword,
     getUserbyEmail,
     updateUser,
     deleteUser
-]
+}

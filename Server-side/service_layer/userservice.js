@@ -89,16 +89,6 @@ const getAllUsers = (callback) =>{
     })
 }
 
-const getUserById = (id,callback) =>{
-    userModel.getUserById(id,(err,result)=>{
-        if(err){
-            console.log('Error happened during getting user by id',err)
-            return callback(err)
-        }
-        console.log('result: ',result)
-        return callback(result)
-    })
-}
 
 const deleteUser = (id,callback) =>{
     userModel.deleteUser(id,(err,result)=>{
@@ -118,6 +108,5 @@ module.exports ={
     getprofile,
     updateProfile,
     getAllUsers,
-    getUserById,
     deleteUser
 }
