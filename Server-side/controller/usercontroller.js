@@ -26,8 +26,8 @@ const ResiterUser = (req,res) =>{
 
 const LoginUser = (req,res) =>{
     const user  =req.body
-
     userservice.loginUser(user,(err,result)=>{
+        console.log('3. Service callback reached');
         if(err){
             console.log('Error happened on the user login at the controller',err)
             return res.status(404).json({

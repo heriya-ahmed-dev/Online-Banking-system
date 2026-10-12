@@ -9,8 +9,9 @@ const registerUser = (user,callback) =>{
             console.log('Error happened when during user registration',err)
             return callback(err)
         }
-        if(result > 0){
+        if(result.length > 0){
             console.log('User already registered can not e registered again!!!')
+            return callback(null,result)
             
         }
 
@@ -34,7 +35,7 @@ const registerUser = (user,callback) =>{
                 return callback(err)
             }
             console.log(result)
-            return callback(result)
+            return callback(null,result)
         })
         })
        
@@ -58,9 +59,10 @@ const loginUser  = (user,callback) =>{
             }
             if(!isMatched){
                 console.log('Please login within the correct password')
+                return callback(err)
             }
             console.log('password succesfully verified!!!')
-            return callback(result[0])
+            return callback(null,result[0])
         })
         
      })
