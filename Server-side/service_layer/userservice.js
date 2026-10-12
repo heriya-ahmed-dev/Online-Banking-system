@@ -50,7 +50,19 @@ const loginUser  = (user,callback) =>{
         }
         if(result.length === 0){
             console.log('Sorry the user is not existed please newly register')
+            return callback('cant pass the service layer one')
         }
+        bcrypt.compare(user.password,result[0].password,(err,isMatched)=>{
+            if(err){
+                return callback(err)
+            }
+            if(!isMatched){
+                console.log('Please login within the correct password')
+            }
+            console.log('password succesfully verified!!!')
+            return callback(result[0])
+        })
+        
      })
 }
 
