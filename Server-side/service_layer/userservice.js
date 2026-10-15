@@ -3,12 +3,16 @@ const bcrypt = require('bcrypt');
 const userModel = require('../model/usermodel')
 
 const registerUser = (user,callback) =>{
-    
+    console.log('SERVICE:', user);
+
     userModel.getUserbyEmail(user.email,(err,result)=>{
+        console.log('SERVICE Email:', user.email);
+
         if(err){
             console.log('Error happened when during user registration',err)
             return callback(err)
         }
+
         if(result.length > 0){
             console.log('User already registered can not e registered again!!!')
             return callback(null,result)

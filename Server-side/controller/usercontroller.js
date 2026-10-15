@@ -5,10 +5,9 @@ const userservice = require('../service_layer/userservice');
 
  require('dotenv').config()
 
-const ResiterUser = (req,res) =>{
-    
+const ResiterUser = (req,res) =>{   
     const user = req.body
-
+     console.log('CONTROLLER:', user);
     userservice.registerUser(user,(err,result)=>{
         if(err){
             console.log('Error happened in the user registeration on the controller',err)
