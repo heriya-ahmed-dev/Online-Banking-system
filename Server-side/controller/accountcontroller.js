@@ -1,9 +1,9 @@
 const accountService = require('../service_layer/accountservice');
 
 const createAccount = (req,res) =>{
-    const account = req.body
-
-    accountService.CreateAccount(account,(err,result)=>{
+    const account = req.body;
+     const user_id = req.user.id
+    accountService.CreateAccount(account,user_id,(err,result)=>{
         if(err){
             console.log('Error happend on the controller during account creating');
             return res.status(401).send({
@@ -69,8 +69,8 @@ const GetAccountByEmail = (req,res) =>{
 const UpdateAccount = (req,res) =>{
     const {id} = req.params
     const account = req.body
-
-    accountService.UpdateAccount(account,id,(err,result)=>{
+    const user_id = req.user.id
+    accountService.UpdateAccount(account,user_id,id,(err,result)=>{
         if(err){
            console.log(err)
            return res.status(401).send(err)

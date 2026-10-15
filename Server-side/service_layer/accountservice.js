@@ -2,11 +2,10 @@ const crypto = require('crypto')
 
 const accountModel = require('../model/accountmodel')
 
-const CreateAccount = (Account,callback) =>{
-    
+const CreateAccount = (user_id,Account,callback) =>{
      const accountNum = crypto.randomInt(1000000,9999999);
             const newAccount = {
-                  user_id : Account.user_id,
+                  user_id : user_id,
                   account_number: accountNum,
                   account_type : Account.account_type,
                   balance : Account.balance,

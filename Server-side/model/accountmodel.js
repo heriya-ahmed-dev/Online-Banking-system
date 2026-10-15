@@ -1,6 +1,6 @@
 const db = require('../db')
 
-const createAccount = (account,callback) =>{
+const createAccount = (user_id,account,callback) =>{
     const sql = `INSERT INTO account  
                  (user_id , account_number ,account_type , balance , status,created_at)
                  VALUES(?,?,?,?,?,?)
@@ -22,7 +22,8 @@ const getAllacount = (callback) =>{
     const sql =`SELECT * FROM account`
 
     db.query(sql,callback)
-}
+};
+
 
 const getaccountById = (id,callback) =>{
     
@@ -50,9 +51,10 @@ const updateAccount = (email,account,callback) =>{
         balance,
         status,
         created_at
+
     ]
 
-    db.query(sql,values,callback)
+    db.query(sql,[email],values,callback)
 }
 
 const getaccountByEmail = (email,callback) =>{
